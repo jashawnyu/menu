@@ -92,23 +92,23 @@ bool menuBack(const Menu::Action_t a) {
 uint8_t menuItemsVisible = LCD_LINES;
 
 void renderMenuItem(const Menu::Item_t *mi, uint8_t pos) {
-  lcd.setCursor(0, pos);
+  lcd.setCursor(0, pos); //pos指显示的行数
 
   // cursor
   if (engine->currentItem == mi) {
-    lcd.write((uint8_t)IconBlock);
+    lcd.write((uint8_t)IconBlock); //这里写了第pos行的第一个位置,如果是当前的item就显示方块示意选中，如果不是则是空格
   }
   else {
-    lcd.write(20); // space
+    lcd.write(20); // space 写空格
   }
 
-  lcd.print(engine->getLabel(mi));
+  lcd.print(engine->getLabel(mi)); //接着把label显示出来，注意显示指针是自动移动的
 
   // mark items that have children
   if (engine->getChild(mi) != &Menu::NullItem) {
     lcd.write(20);
     lcd.write((uint8_t)IconRight);
-    lcd.print("       ");
+    lcd.print("       ");//后面跟上这个空格，
   }
 }
 
@@ -119,17 +119,17 @@ MenuItem(miExit, "", Menu::NullItem, Menu::NullItem, Menu::NullItem, miSettings,
 
 MenuItem(miSettings, "Settings", miTest1, Menu::NullItem, miExit, miCalibrateLo, menuDummy);
 
-  MenuItem(miCalibrateLo,  "Calibrate Lo", miCalibrateHi,  Menu::NullItem,       miSettings, Menu::NullItem, menuDummy);
-  MenuItem(miCalibrateHi,  "Calibrate Hi", miChannel0, miCalibrateLo,  miSettings, Menu::NullItem, menuDummy);
+MenuItem(miCalibrateLo,  "Calibrate Lo", miCalibrateHi,  Menu::NullItem,       miSettings, Menu::NullItem, menuDummy);
+MenuItem(miCalibrateHi,  "Calibrate Hi", miChannel0, miCalibrateLo,  miSettings, Menu::NullItem, menuDummy);
 
-  MenuItem(miChannel0, "Channel 0", miChannel1, miCalibrateHi, miSettings, miChView0, menuDummy);
-    MenuItem(miChView0,  "Ch0:View",  miChScale0,     Menu::NullItem, miChannel0, Menu::NullItem, menuDummy);    
-    MenuItem(miChScale0, "Ch0:Scale", Menu::NullItem, miChView0,      miChannel0, Menu::NullItem, menuDummy);    
+MenuItem(miChannel0, "Channel 0", miChannel1, miCalibrateHi, miSettings, miChView0, menuDummy);
+MenuItem(miChView0,  "Ch0:View",  miChScale0,     Menu::NullItem, miChannel0, Menu::NullItem, menuDummy);    
+MenuItem(miChScale0, "Ch0:Scale", Menu::NullItem, miChView0,      miChannel0, Menu::NullItem, menuDummy);    
 
-  MenuItem(miChannel1, "Channel 1", Menu::NullItem, miChannel0, miSettings, miChView1, menuDummy);
-    MenuItem(miChView1,  "Ch1:View",  miChScale1,     Menu::NullItem, miChannel1, Menu::NullItem, menuDummy);    
-    MenuItem(miChScale1, "Ch1:Scale", miChBack1,      miChView1,      miChannel1, Menu::NullItem, menuDummy); 
-    MenuItem(miChBack1,  "Back \02",      Menu::NullItem, miChScale1,     miChannel1, Menu::NullItem, menuBack);
+MenuItem(miChannel1, "Channel 1", Menu::NullItem, miChannel0, miSettings, miChView1, menuDummy);
+MenuItem(miChView1,  "Ch1:View",  miChScale1,     Menu::NullItem, miChannel1, Menu::NullItem, menuDummy);    
+MenuItem(miChScale1, "Ch1:Scale", miChBack1,      miChView1,      miChannel1, Menu::NullItem, menuDummy); 
+MenuItem(miChBack1,  "Back \02",      Menu::NullItem, miChScale1,     miChannel1, Menu::NullItem, menuBack);
 
 MenuItem(miTest1, "Test 1 Menu", miTest2,        miSettings, miExit, Menu::NullItem, menuDummy);
 MenuItem(miTest2, "Test 2 Menu", miTest3,        miTest1,    miExit, Menu::NullItem, menuDummy);
@@ -196,7 +196,7 @@ void setup() {
   lcd.clear();
   lcd.setCursor(0, 0);
 
-  lcd.createChar(IconLeft, left);
+  lcd.createChar(IconLeft, left);//这里相当于自定义的图形，1602a最多可以定义8个
   lcd.createChar(IconRight, right);
   lcd.createChar(IconBack, back);
   lcd.createChar(IconBlock, block);

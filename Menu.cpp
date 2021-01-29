@@ -55,7 +55,7 @@ void Engine::navigate(const Item_t * targetItem) {
   uint8_t commit = true;
   if (targetItem && targetItem != &Menu::NullItem) {
     if (targetItem == getParent(currentItem)) { // navigating back to parent
-      commit = executeCallbackAction(actionParent); // exit/save callback
+      commit = executeCallbackAction(actionParent); // exit/save callback, but currently we don't do this
       lastInvokedItem = &Menu::NullItem;
     }
     if (commit) {
@@ -118,14 +118,14 @@ Info_t Engine::getItemInfo(const Item_t * item) const {
 
 // ----------------------------------------------------------------------------
 
-void Engine::render(const RenderCallback_t render, uint8_t maxDisplayedMenuItems) const {    
+void Engine::render(const RenderCallback_t render, uint8_t maxDisplayedMenuItems) const {    //4
   if (!currentItem || currentItem == &Menu::NullItem) {
     return;
   }
 
   uint8_t start = 0;
   uint8_t itemCount = 0;
-  const uint8_t center = maxDisplayedMenuItems >> 1;
+  const uint8_t center = maxDisplayedMenuItems >> 1;//center = 2;
   Info_t mi = getItemInfo(currentItem);
   
   if (mi.position >= (mi.siblings - center)) { // at end
@@ -140,8 +140,8 @@ void Engine::render(const RenderCallback_t render, uint8_t maxDisplayedMenuItems
 
   // first item in current menu level
   const Item_t * i = getChild(getParent());  
-  for (; i && i != &Menu::NullItem && &i->Next && i->Next != &Menu::NullItem; i = getNext(i)) {
-    if (itemCount - start >= maxDisplayedMenuItems) break;
+  for (; i && i != &Menu::NullItem && &i->Next && i->Next != &Menu::NullItem; i = getNext(i)) {//其实这个最多只显示4行
+    if (itemCount - start >= maxDisplayedMenuItems) break;//直接跳出
     if (itemCount >= start) render(i, itemCount - start);
     itemCount++;
   }
